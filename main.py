@@ -40,22 +40,20 @@ def enemyMove(enemy_1, enemy_2, enemy_3):
     for enemy in enemies:
         direction = random.choice(['left', 'right', 'up', 'down'])
 
-        if direction == 'left':
-            newx1 = enemy.x - random.randint(0, 1)
-            enemy.x = max(0, min(newx1, 970))
+        if direction == "up":
+            enemy.y -= 1
+        elif direction == "down":
+            enemy.y += 1
+        elif direction == "left":
+            enemy.x -= 1
+        elif direction == "right":
+            enemy.x += 1
 
-        elif direction == 'right':
-            newx1 = enemy.x + random.randint(0, 1)
-            enemy.x = max(0, min(newx1, 970))
-
-        elif direction == 'up':
-            newy1 = enemy.y - random.randint(0, 1)
-            enemy.y = max(0, min(newy1, 770))
-
-        elif direction == 'down':
-            newy1 = enemy.y + random.randint(0, 1)
-            enemy.y = max(0, min(newy1, 770))
-
+            # Check if the enemy is off the screen
+        if enemy.x < 0 or enemy.x > WIDTH or enemy.y < 0 or enemy.y > HEIGHT:
+            # If the enemy is off the screen, reset its position
+            enemy.x = random.randint(0, WIDTH)
+            enemy.y = random.randint(0, HEIGHT)
 
 def main():
     run = True
@@ -83,9 +81,11 @@ def main():
         elif keys[pygame.K_DOWN] and player.y + PLAYER_VEL + player.height <= HEIGHT:
             player.y += PLAYER_VEL
 
+
         enemyMove(enemy_1, enemy_2, enemy_3)
 
         draw(player, enemy_1, enemy_2, enemy_3)
+
 
         distance_x = player.x - enemy_1.x
         distance_y = player.y - enemy_1.y
@@ -100,39 +100,6 @@ def main():
                 enemy.x += speed * distance_x / distance
                 enemy.y += speed * distance_y / distance
 
-        speed = 2
-
-        for enemy in enemies:
-
-            if distance < 300:
-                if distance != 0:
-                    enemy.x += speed * distance_x / distance
-                    enemy.y += speed * distance_y / distance
-
-            if distance < 400:
-                if distance != 0:
-                    # Calculate the unit vector toward the player
-                    unit_vector_x = distance_x / distance
-                    unit_vector_y = distance_y / distance
-
-                    # Calculate the perpendicular vector
-                    perpendicular_vector_x = -unit_vector_y
-                    perpendicular_vector_y = unit_vector_x
-
-                    # Calculate the dot product of the perpendicular vector and the
-                    # unit vector
-                    dot_product = perpendicular_vector_x * unit_vector_x
-                    + perpendicular_vector_y * unit_vector_y
-
-                # Move the enemy perpendicular to the unit vector
-                if dot_product > 0:
-                    enemy.x += speed * perpendicular_vector_x
-                    enemy.y += speed * perpendicular_vector_y
-
-                else:
-                    enemy.x -= speed * perpendicular_vector_x
-                    enemy.y -= speed * perpendicular_vector_y
-                    
     pygame.quit()
 
 
