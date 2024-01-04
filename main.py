@@ -98,6 +98,12 @@ def enemyMove(enemy_1, enemy_2, enemy_3):
             enemy.x = random.randint(0, WIDTH)
             enemy.y = random.randint(0, HEIGHT)
 
+def check_collisions(player, enemy_1, enemy_2, enemy_3):
+    if ((player.y - PLAYER_HEIGHT/2) >= (enemy_1.y - SMALL_GERM_HEIGHT/2)) and ((player.y - PLAYER_HEIGHT/2) <= (enemy_1.y + SMALL_GERM_HEIGHT/2)):
+        print("hit bottom")
+    elif ((player.y + PLAYER_HEIGHT/2) >= (enemy_1.y - SMALL_GERM_HEIGHT/2)) and ((player.y + PLAYER_HEIGHT/2) <= (enemy_1.y + SMALL_GERM_HEIGHT/2)):
+        print("top hit")
+
 def main():
     run = True
 
@@ -126,10 +132,10 @@ def main():
         elif keys[pygame.K_DOWN] and player.y + VEL + player.height <= HEIGHT:
             player.y += VEL
 
-
-        enemyMove(enemy_1, enemy_2, enemy_3)
-
         draw(player, enemy_1, enemy_2, enemy_3)
+        #enemyMove(enemy_1, enemy_2, enemy_3)
+        check_collisions(player, enemy_1, enemy_2, enemy_3)
+
 
 
         distance_x = player.x - enemy_1.x
@@ -139,11 +145,11 @@ def main():
         # Move the enemy toward the player
         speed = 2
 
-        for enemy in enemies:
+        #for enemy in enemies:
 
-            if distance != 0:
-                enemy.x += speed * distance_x / distance
-                enemy.y += speed * distance_y / distance
+         #   if distance != 0:
+          #      enemy.x += speed * distance_x / distance
+           #     enemy.y += speed * distance_y / distance
 
     pygame.quit()
 
