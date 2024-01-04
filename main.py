@@ -125,6 +125,7 @@ def main():
             player.y -= VEL
         elif keys[pygame.K_DOWN] and player.y + VEL + player.height <= HEIGHT:
             player.y += VEL
+            
 
 
         enemyMove(enemy_1, enemy_2, enemy_3)
@@ -137,7 +138,7 @@ def main():
         distance = (distance_x ** 2 + distance_y ** 2) ** 0.5
 
         # Move the enemy toward the player
-        speed = 2
+        speed = 0.6
 
         for enemy in enemies:
 
