@@ -16,8 +16,8 @@ PI = math.pi
 PLAYER_WIDTH = 25
 PLAYER_HEIGHT = 25
 
-SMALL_GERM_WIDTH = 25
-SMALL_GERM_HEIGHT = 25
+SMALL_GERM_WIDTH = 15
+SMALL_GERM_HEIGHT = 15
 
 MED_GERM_WIDTH = 40
 MED_GERM_HEIGHT = 40
@@ -27,20 +27,28 @@ LARGE_GERM_HEIGHT = 60
 
 VEL = 2
 
-small_germ_dead = False
-med_germ_dead = False
-large_germ_dead = False
+player_image = pygame.transform.scale(pygame.image.load(f'assets/player_images/1.png'), (70, 70))
+small_germ_image = pygame.transform.scale(pygame.image.load(f'assets/germ_images/blue.png'), (50, 50))
+med_germ_img = pygame.transform.scale(pygame.image.load(f'assets/germ_images/orange.png'), (90, 90))
+large_germ_img = pygame.transform.scale(pygame.image.load(f'assets/germ_images/red.png'), (110, 110))
 
-player_image = pygame.transform.scale(pygame.image.load(f'assets/player_images/1.png'), (60, 60))
-small_germ_image = pygame.transform.scale(pygame.image.load(f'assets/germ_images/blue.png'), (60, 60))
-med_germ_img = pygame.transform.scale(pygame.image.load(f'assets/germ_images/orange.png'), (70, 70))
-large_germ_img = pygame.transform.scale(pygame.image.load(f'assets/germ_images/red.png'), (80, 80))
+class Germs:
+    def __init__(self, name, width, height, is_dead, x, y):
+        self.name = name
+        self.width = width 
+        self.height = height
+        self.is_dead = is_dead
+        self.x = x
+        self.y = y
 
 def draw(player, enemy_1, enemy_2, enemy_3):
     WIN.blit(player_image, (player.x, player.y))
-    WIN.blit(small_germ_image, (enemy_1.x, enemy_1.y))
-    WIN.blit(med_germ_img, (enemy_2.x, enemy_2.y))
-    WIN.blit(large_germ_img, (enemy_3.x, enemy_3.y))
+    if not enemy_1.is_dead:
+        WIN.blit(small_germ_image, (enemy_1.x, enemy_1.y))
+    if not enemy_2.is_dead:
+        WIN.blit(med_germ_img, (enemy_2.x, enemy_2.y))
+    if not enemy_3.is_dead:
+        WIN.blit(large_germ_img, (enemy_3.x, enemy_3.y))
 
     pygame.display.update()
 
@@ -99,18 +107,20 @@ def enemyMove(enemy_1, enemy_2, enemy_3):
             enemy.y = random.randint(0, HEIGHT)
 
 def check_collisions(player, enemy_1, enemy_2, enemy_3):
-    if ((player.y - PLAYER_HEIGHT/2) >= (enemy_1.y - SMALL_GERM_HEIGHT/2)) and ((player.y - PLAYER_HEIGHT/2) <= (enemy_1.y + SMALL_GERM_HEIGHT/2)) \
-        or ((player.y + PLAYER_HEIGHT/2) >= (enemy_1.y - SMALL_GERM_HEIGHT/2)) and ((player.y + PLAYER_HEIGHT/2) <= (enemy_1.y + SMALL_GERM_HEIGHT/2)):
-        print("top hit")
+    if ((player.y - player_image.get_height()/2) >= (enemy_1.y - enemy_1.height/2)) and ((player.y - player_image.get_height()/2) <= (enemy_1.y + enemy_1.height/2)) \
+        or ((player.y + player_image.get_height()/2) >= (enemy_1.y - enemy_1.height/2)) and ((player.y + player_image.get_height()/2) <= (enemy_1.y + enemy_1.height/2)):
+        if ((player.x - player_image.get_width()/2) >= (enemy_1.x - enemy_1.width/2) and (player.x - player_image.get_width()/2) <= (enemy_1.x + enemy_1.width/2)) \
+            or ((player.x + player_image.get_width()/2) <= (enemy_1.x + enemy_1.width/2) and (player.x + player_image.get_width()/2) >= (enemy_1.x - enemy_1.width/2)):
+            enemy_1.is_dead = True
 
 def main():
     run = True
 
     player = pygame.Rect(200, HEIGHT - PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_HEIGHT)
-    enemy_1 = pygame.Rect(750, 900, SMALL_GERM_WIDTH, SMALL_GERM_HEIGHT)
-    enemy_2 = pygame.Rect(500, 250, MED_GERM_WIDTH, MED_GERM_HEIGHT)
-    enemy_3 = pygame.Rect(900, 50, LARGE_GERM_WIDTH, LARGE_GERM_HEIGHT)
-
+    enemy_1 = Germs("enemy_1", small_germ_image.get_width(), small_germ_image.get_height(), False, 500, 500)
+    enemy_2 = Germs("enemy_2", med_germ_img.get_width(), med_germ_img.get_height(), False, 500, 200)
+    enemy_3 = Germs("enemy_3", large_germ_img.get_width(), large_germ_img.get_height(), False, 750, 300)
+    
     enemies = [enemy_1, enemy_2, enemy_3]
 
     while run:
