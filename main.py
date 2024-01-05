@@ -99,9 +99,8 @@ def enemyMove(enemy_1, enemy_2, enemy_3):
             enemy.y = random.randint(0, HEIGHT)
 
 def check_collisions(player, enemy_1, enemy_2, enemy_3):
-    if ((player.y - PLAYER_HEIGHT/2) >= (enemy_1.y - SMALL_GERM_HEIGHT/2)) and ((player.y - PLAYER_HEIGHT/2) <= (enemy_1.y + SMALL_GERM_HEIGHT/2)):
-        print("hit bottom")
-    elif ((player.y + PLAYER_HEIGHT/2) >= (enemy_1.y - SMALL_GERM_HEIGHT/2)) and ((player.y + PLAYER_HEIGHT/2) <= (enemy_1.y + SMALL_GERM_HEIGHT/2)):
+    if ((player.y - PLAYER_HEIGHT/2) >= (enemy_1.y - SMALL_GERM_HEIGHT/2)) and ((player.y - PLAYER_HEIGHT/2) <= (enemy_1.y + SMALL_GERM_HEIGHT/2)) \
+        or ((player.y + PLAYER_HEIGHT/2) >= (enemy_1.y - SMALL_GERM_HEIGHT/2)) and ((player.y + PLAYER_HEIGHT/2) <= (enemy_1.y + SMALL_GERM_HEIGHT/2)):
         print("top hit")
 
 def main():
