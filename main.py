@@ -27,10 +27,10 @@ LARGE_GERM_HEIGHT = 60
 
 VEL = 2
 
-player_image = pygame.transform.scale(pygame.image.load(f'assets/player_images/1.png'), (70, 70))
+player_image = pygame.transform.scale(pygame.image.load(f'assets/player_images/1.png'), (60, 60))
 small_germ_image = pygame.transform.scale(pygame.image.load(f'assets/germ_images/blue.png'), (50, 50))
-med_germ_img = pygame.transform.scale(pygame.image.load(f'assets/germ_images/orange.png'), (90, 90))
-large_germ_img = pygame.transform.scale(pygame.image.load(f'assets/germ_images/red.png'), (110, 110))
+med_germ_img = pygame.transform.scale(pygame.image.load(f'assets/germ_images/orange.png'), (70, 70))
+large_germ_img = pygame.transform.scale(pygame.image.load(f'assets/germ_images/red.png'), (90, 90))
 
 class Germs:
     def __init__(self, name, width, height, is_dead, x, y):
@@ -107,11 +107,25 @@ def enemyMove(enemy_1, enemy_2, enemy_3):
             enemy.y = random.randint(0, HEIGHT)
 
 def check_collisions(player, enemy_1, enemy_2, enemy_3):
+    global player_image
     if ((player.y - player_image.get_height()/2) >= (enemy_1.y - enemy_1.height/2)) and ((player.y - player_image.get_height()/2) <= (enemy_1.y + enemy_1.height/2)) \
         or ((player.y + player_image.get_height()/2) >= (enemy_1.y - enemy_1.height/2)) and ((player.y + player_image.get_height()/2) <= (enemy_1.y + enemy_1.height/2)):
         if ((player.x - player_image.get_width()/2) >= (enemy_1.x - enemy_1.width/2) and (player.x - player_image.get_width()/2) <= (enemy_1.x + enemy_1.width/2)) \
             or ((player.x + player_image.get_width()/2) <= (enemy_1.x + enemy_1.width/2) and (player.x + player_image.get_width()/2) >= (enemy_1.x - enemy_1.width/2)):
             enemy_1.is_dead = True
+            player_image = pygame.transform.scale(player_image, (80, 80))
+    if ((player.y - player_image.get_height()/2) >= (enemy_2.y - enemy_2.height/2)) and ((player.y - player_image.get_height()/2) <= (enemy_2.y + enemy_2.height/2)) \
+        or ((player.y + player_image.get_height()/2) >= (enemy_2.y - enemy_2.height/2)) and ((player.y + player_image.get_height()/2) <= (enemy_2.y + enemy_2.height/2)):
+        if ((player.x - player_image.get_width()/2) >= (enemy_2.x - enemy_2.width/2) and (player.x - player_image.get_width()/2) <= (enemy_2.x + enemy_2.width/2)) \
+            or ((player.x + player_image.get_width()/2) <= (enemy_2.x + enemy_2.width/2) and (player.x + player_image.get_width()/2) >= (enemy_2.x - enemy_2.width/2)):
+            enemy_2.is_dead = True
+            player_image = pygame.transform.scale(player_image, (100, 100))
+    if ((player.y - player_image.get_height()/2) >= (enemy_3.y - enemy_3.height/2)) and ((player.y - player_image.get_height()/2) <= (enemy_3.y + enemy_3.height/2)) \
+        or ((player.y + player_image.get_height()/2) >= (enemy_3.y - enemy_3.height/2)) and ((player.y + player_image.get_height()/2) <= (enemy_3.y + enemy_3.height/2)):
+        if ((player.x - player_image.get_width()/2) >= (enemy_3.x - enemy_3.width/2) and (player.x - player_image.get_width()/2) <= (enemy_3.x + enemy_3.width/2)) \
+            or ((player.x + player_image.get_width()/2) <= (enemy_3.x + enemy_3.width/2) and (player.x + player_image.get_width()/2) >= (enemy_3.x - enemy_3.width/2)):
+            enemy_3.is_dead = True
+            player_image = pygame.transform.scale(player_image, (110, 110))
 
 def main():
     run = True
