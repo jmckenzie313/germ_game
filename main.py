@@ -85,11 +85,16 @@ def draw_obstacles():
                                     (j * num2 + num2, i * num1 + (0.5 * num1)), 3)
 
 
-def enemyMove(enemy_1, enemy_2, enemy_3):
+def enemyMove(player, enemy_1, enemy_2, enemy_3):
     enemies = [enemy_1, enemy_2, enemy_3]
 
     for enemy in enemies:
         direction = random.choice(['left', 'right', 'up', 'down'])
+        speed = 0.3
+
+        distance_x = player.x - enemy.x
+        distance_y = player.y - enemy.y
+        distance = (distance_x ** 2 + distance_y ** 2) ** 0.5
 
         if direction == "up":
             enemy.y -= 1
@@ -99,12 +104,16 @@ def enemyMove(enemy_1, enemy_2, enemy_3):
             enemy.x -= 1
         elif direction == "right":
             enemy.x += 1
+        if distance != 0:
+            enemy.x += speed * distance_x / distance
+            enemy.y += speed * distance_y / distance
 
             # Check if the enemy is off the WIN
         if enemy.x < 0 or enemy.x > WIDTH or enemy.y < 0 or enemy.y > HEIGHT:
             # If the enemy is off the WIN, reset its position
             enemy.x = random.randint(0, WIDTH)
             enemy.y = random.randint(0, HEIGHT)
+
 
 def check_collisions(player, enemy_1, enemy_2, enemy_3):
     global player_image
@@ -127,6 +136,7 @@ def check_collisions(player, enemy_1, enemy_2, enemy_3):
             enemy_3.is_dead = True
             player_image = pygame.transform.scale(player_image, (110, 110))
 
+
 def main():
     run = True
 
@@ -135,7 +145,6 @@ def main():
     enemy_2 = Germs("enemy_2", med_germ_img.get_width(), med_germ_img.get_height(), False, 500, 200)
     enemy_3 = Germs("enemy_3", large_germ_img.get_width(), large_germ_img.get_height(), False, 750, 300)
     
-    enemies = [enemy_1, enemy_2, enemy_3]
 
     while run:
         WIN.fill('white')
@@ -157,23 +166,11 @@ def main():
 
 
         draw(player, enemy_1, enemy_2, enemy_3)
-        #enemyMove(enemy_1, enemy_2, enemy_3)
+        enemyMove(player, enemy_1, enemy_2, enemy_3)
         check_collisions(player, enemy_1, enemy_2, enemy_3)
 
-
-
-        distance_x = player.x - enemy_1.x
-        distance_y = player.y - enemy_1.y
-        distance = (distance_x ** 2 + distance_y ** 2) ** 0.5
-
-        # Move the enemy toward the player
-        speed = 0.6
-
-        #for enemy in enemies:
-
-         #   if distance != 0:
-          #      enemy.x += speed * distance_x / distance
-           #     enemy.y += speed * distance_y / distance
+        if enemy_1.is_dead and enemy_2.is_dead and enemy_3.is_dead:
+            run = False
 
     pygame.quit()
 
