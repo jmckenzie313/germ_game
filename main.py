@@ -87,6 +87,42 @@ def start_menu():
         pygame.display.flip()
 
 
+def reset_player_image():
+    global player_image
+    player_image = pygame.transform.scale(pygame.image.load(f'assets/player_images/1.png'), (60, 60))
+
+
+def you_win_screen():
+    you_win_text = font_large.render("You won!", True, white)
+    you_win_rect = you_win_text.get_rect(center=(WIDTH // 2, HEIGHT // 3))
+    restart_text = font_small.render("Press R to Restart", True, white)
+    restart_rect = restart_text.get_rect(center=(WIDTH // 2, HEIGHT * 2 // 3))
+    exit_text = font_small.render("Press Q to Quit", True, white)
+    exit_rect = exit_text.get_rect(center=(WIDTH // 2, HEIGHT * 5 // 6))
+
+    WIN.fill(black)
+    WIN.blit(you_win_text, you_win_rect)
+    WIN.blit(restart_text, restart_rect)
+    WIN.blit(exit_text, exit_rect)
+
+    pygame.display.flip()
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    if __name__ == '__main__':
+                        reset_player_image()  # Reset the player image size
+                        main()
+                    return
+                elif event.key == pygame.K_q:
+                    pygame.quit()
+                    sys.exit()
+
+
 def game_over_screen():
     game_over_text = font_large.render("Game Over", True, red)
     game_over_rect = game_over_text.get_rect(center=(WIDTH // 2, HEIGHT // 3))
@@ -110,6 +146,7 @@ def game_over_screen():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r:
                     if __name__ == '__main__':
+                        reset_player_image()  # Reset the player image size
                         main()
                     return
                 elif event.key == pygame.K_q:
@@ -212,8 +249,11 @@ def check_collisions(player, enemy_1, enemy_2, enemy_3):
                 player.x - player_image.get_width() / 2) <= (enemy_2.x + enemy_2.width / 2)) \
                 or ((player.x + player_image.get_width() / 2) <= (enemy_2.x + enemy_2.width / 2) and (
                 player.x + player_image.get_width() / 2) >= (enemy_2.x - enemy_2.width / 2)):
-            enemy_2.is_dead = True
-            player_image = pygame.transform.scale(player_image, (100, 100))
+            if player_image.get_height() > enemy_2.height:
+                enemy_2.is_dead = True
+                player_image = pygame.transform.scale(player_image, (100, 100))
+            else:
+                game_over_screen()
     if ((player.y - player_image.get_height() / 2) >= (enemy_3.y - enemy_3.height / 2)) and (
             (player.y - player_image.get_height() / 2) <= (enemy_3.y + enemy_3.height / 2)) \
             or ((player.y + player_image.get_height() / 2) >= (enemy_3.y - enemy_3.height / 2)) and (
@@ -222,8 +262,11 @@ def check_collisions(player, enemy_1, enemy_2, enemy_3):
                 player.x - player_image.get_width() / 2) <= (enemy_3.x + enemy_3.width / 2)) \
                 or ((player.x + player_image.get_width() / 2) <= (enemy_3.x + enemy_3.width / 2) and (
                 player.x + player_image.get_width() / 2) >= (enemy_3.x - enemy_3.width / 2)):
-            enemy_3.is_dead = True
-            player_image = pygame.transform.scale(player_image, (110, 110))
+            if player_image.get_height() > enemy_3.height:
+                enemy_3.is_dead = True
+                player_image = pygame.transform.scale(player_image, (100, 100))
+            else:
+                game_over_screen()
 
 
 def main():
@@ -258,9 +301,7 @@ def main():
         check_collisions(player, enemy_1, enemy_2, enemy_3)
 
         if enemy_1.is_dead and enemy_2.is_dead and enemy_3.is_dead:
-            game_over_screen()
-
-            # run = False
+            you_win_screen()
 
     pygame.quit()
 
