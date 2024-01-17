@@ -231,6 +231,11 @@ def enemy_move(player, enemy_1, enemy_2, enemy_3):
 
 def check_collisions(player, enemy_1, enemy_2, enemy_3):
     global player_image
+
+    # Store the player's previous position
+    previous_player_x, previous_player_y = player.x, player.y
+
+    # Collision with enemies
     if ((player.y - player_image.get_height() / 2) >= (enemy_1.y - enemy_1.height / 2)) and (
             (player.y - player_image.get_height() / 2) <= (enemy_1.y + enemy_1.height / 2)) \
             or ((player.y + player_image.get_height() / 2) >= (enemy_1.y - enemy_1.height / 2)) and (
@@ -267,6 +272,25 @@ def check_collisions(player, enemy_1, enemy_2, enemy_3):
                 player_image = pygame.transform.scale(player_image, (100, 100))
             else:
                 game_over_screen()
+
+    # Collision with obstacles
+    num1 = ((HEIGHT - 50) // 32)
+    num2 = (WIDTH // 30)
+
+    # Collision with obstacles
+    for i in range(len(OBSTACLES)):
+        for j in range(len(OBSTACLES[i])):
+            if OBSTACLES[i][j] != 0:
+                obstacle_rect = pygame.Rect(j * num2, i * num1, num2, num1)
+                if player.colliderect(obstacle_rect):
+                    if player.x < obstacle_rect.x:
+                        player.x = obstacle_rect.left - player.width
+                    elif player.x > obstacle_rect.x:
+                        player.x = obstacle_rect.right
+                    elif player.y < obstacle_rect.y:
+                        player.y = obstacle_rect.top - player.height
+                    elif player.y > obstacle_rect.y:
+                        player.y = obstacle_rect.bottom
 
 
 def main():
